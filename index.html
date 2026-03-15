@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Once Human — Survive the Contamination | Free Open World Survival Game</title>
+  <meta name="description" content="Once Human is a free-to-play open-world survival game." />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SSX17354E2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SSX17354E2');
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080c10; --fg: #d0dde8; --muted: #5a7080; --border: #1a2530;
+      --primary: hsl(174,65%,46%); --primary-dim: hsl(174,65%,46%,0.3);
+      --secondary: hsl(340,95%,37%);
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Rajdhani', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--fg); font-family: var(--font-body); overflow-x: hidden; line-height: 1.6; }
+    h1,h2,h3,h4,h5,h6 { font-family: var(--font-display); }
+    a { text-decoration: none; color: inherit; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--primary-dim); border-radius: 3px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* HEADER */
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; transition: all 0.3s; padding: 1rem 0; }
+    header.scrolled { background: rgba(8,12,16,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    header .inner { display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; max-width: 1200px; margin: 0 auto; }
+    header nav { display: flex; align-items: center; gap: 2rem; }
+    header nav a { font-family: var(--font-body); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); transition: color 0.2s; }
+    header nav a:hover { color: var(--primary); }
+    .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, var(--primary) 0%, hsl(180,100%,40%) 100%); color: var(--bg); font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; padding: 0.65rem 1.5rem; transition: transform 0.2s; animation: pulse-glow 2s ease-in-out infinite; }
+    .btn-primary:hover { transform: scale(1.05); }
+    .btn-lg { padding: 1.1rem 2.5rem; font-size: 0.9rem; }
+
+    /* HERO */
+    #hero { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-bg video { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%, rgba(8,12,16,0.6) 50%, var(--bg) 100%); z-index: 1; }
+    .hero-overlay2 { position: absolute; inset: 0; background: rgba(8,12,16,0.4); z-index: 1; }
+    .particles { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+    .particle { position: absolute; border-radius: 50%; background: hsl(174,65%,46%,0.3); animation: floatUp linear infinite; }
+    .hero-content { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 6rem 1.5rem 4rem; width: 100%; }
+    .hero-eyebrow { font-family: var(--font-mono); font-size: 0.8rem; color: var(--primary); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1rem; opacity: 0; animation: fadeInLeft 0.6s ease-out 0.3s forwards; }
+    .hero-title { font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 900; text-transform: uppercase; line-height: 0.95; margin-bottom: 1.5rem; opacity: 0; animation: fadeInLeft 0.8s ease-out 0.5s forwards; }
+    .text-cyan { color: var(--primary); text-shadow: 0 0 20px hsl(174,65%,46%,0.5), 0 0 40px hsl(174,65%,46%,0.3); }
+    .text-crimson { color: var(--secondary); text-shadow: 0 0 20px hsl(340,95%,37%,0.5), 0 0 40px hsl(340,95%,37%,0.3); }
+    .hero-desc { font-size: 1.1rem; color: var(--muted); max-width: 36rem; margin-bottom: 2rem; opacity: 0; animation: fadeIn 0.6s ease-out 0.8s forwards; }
+    .hero-cta { opacity: 0; animation: fadeIn 0.6s ease-out 1s forwards; }
+    .hero-stats { display: flex; align-items: center; gap: 1.5rem; margin-top: 2rem; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; color: var(--muted); opacity: 0; animation: fadeIn 0.6s ease-out 1.3s forwards; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: pulse-dot 1.5s ease-in-out infinite; display: inline-block; margin-right: 0.4rem; }
+    .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; color: var(--muted); opacity: 0; animation: fadeIn 0.5s ease-out 2s forwards; }
+    .scroll-hint span { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; }
+    .scroll-arrow { width: 20px; height: 20px; animation: scrollBounce 2s ease-in-out infinite; }
+
+    /* SECTIONS */
+    section { padding: 6rem 0; }
+    .section-eyebrow { font-family: var(--font-mono); font-size: 0.7rem; color: var(--primary); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .section-title { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; text-transform: uppercase; margin-bottom: 1rem; }
+    .text-center { text-align: center; }
+    .section-desc { color: var(--muted); max-width: 42rem; margin: 0 auto; font-size: 1.05rem; }
+
+    /* TRAILER */
+    .trailer-wrapper { position: relative; max-width: 900px; margin: 3rem auto 0; }
+    .trailer-frame { position: relative; aspect-ratio: 16/9; border: 1px solid hsl(174,65%,46%,0.2); overflow: hidden; box-shadow: 0 0 20px hsl(174,65%,46%,0.3); }
+    .trailer-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+    .corner { position: absolute; width: 24px; height: 24px; }
+    .corner-tl { top: -1px; left: -1px; border-top: 2px solid var(--primary); border-left: 2px solid var(--primary); }
+    .corner-tr { top: -1px; right: -1px; border-top: 2px solid var(--primary); border-right: 2px solid var(--primary); }
+    .corner-bl { bottom: -1px; left: -1px; border-bottom: 2px solid var(--secondary); border-left: 2px solid var(--secondary); }
+    .corner-br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--secondary); border-right: 2px solid var(--secondary); }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .feature-card { background: linear-gradient(135deg, #0d1117 0%, #110d1f 100%); border: 1px solid var(--border); padding: 2rem; position: relative; transition: border-color 0.3s, transform 0.3s; cursor: default; overflow: hidden; }
+    .feature-card:hover { transform: scale(1.02); }
+    .feature-card.cyan:hover { border-color: hsl(174,65%,46%,0.4); }
+    .feature-card.red:hover { border-color: hsl(340,95%,37%,0.4); }
+    .slide-line { position: absolute; bottom: 0; left: 0; width: 0; height: 2px; transition: width 0.5s; }
+    .feature-card:hover .slide-line { width: 100%; }
+    .feature-card.cyan .slide-line { background: var(--primary); }
+    .feature-card.red .slide-line { background: var(--secondary); }
+    .feature-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+    .feature-icon.cyan { border: 1px solid hsl(174,65%,46%,0.3); background: hsl(174,65%,46%,0.1); }
+    .feature-icon.red { border: 1px solid hsl(340,95%,37%,0.3); background: hsl(340,95%,37%,0.1); }
+    .feature-icon svg { width: 24px; height: 24px; }
+    .feature-icon.cyan svg { stroke: var(--primary); }
+    .feature-icon.red svg { stroke: var(--secondary); }
+    .feature-card h3 { font-size: 1rem; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .feature-card p { color: var(--muted); font-size: 0.95rem; }
+
+    /* GALLERY */
+    .screenshots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 3rem; }
+    .screenshot-item { position: relative; overflow: hidden; aspect-ratio: 16/9; border: 1px solid var(--border); cursor: pointer; }
+    .screenshot-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
+    .screenshot-item:hover img { transform: scale(1.1); }
+    .screenshot-label { position: absolute; inset: 0; background: rgba(8,12,16,0.6); opacity: 0; transition: opacity 0.3s; display: flex; align-items: flex-end; padding: 1rem; }
+    .screenshot-item:hover .screenshot-label { opacity: 1; }
+    .screenshot-label span { font-family: var(--font-display); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--primary); text-shadow: 0 0 20px hsl(174,65%,46%,0.5); }
+
+    /* SETTLEMENT */
+    .settlement-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .settlement-eyebrow { color: var(--secondary) !important; }
+    .highlight { color: var(--secondary); text-shadow: 0 0 20px hsl(340,95%,37%,0.5); }
+    .settlement-list { list-style: none; margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .settlement-list li { display: flex; align-items: center; gap: 0.75rem; color: var(--muted); }
+    .settlement-list li::before { content: ''; width: 6px; height: 6px; background: var(--secondary); flex-shrink: 0; }
+    .settlement-img { position: relative; }
+    .settlement-img img { width: 100%; border: 1px solid var(--border); display: block; }
+    .c-tl { position: absolute; top: -8px; left: -8px; width: 32px; height: 32px; border-top: 2px solid var(--primary); border-left: 2px solid var(--primary); }
+    .c-br { position: absolute; bottom: -8px; right: -8px; width: 32px; height: 32px; border-bottom: 2px solid var(--secondary); border-right: 2px solid var(--secondary); }
+
+    /* REVIEWS */
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; max-width: 960px; margin: 3rem auto 0; }
+    .review-card { background: linear-gradient(135deg, #0d1117 0%, #110d1f 100%); border: 1px solid var(--border); padding: 2rem; position: relative; overflow: hidden; transition: border-color 0.3s; }
+    .review-card:hover { border-color: hsl(174,65%,46%,0.3); }
+    .top-line { position: absolute; top: 0; left: 0; width: 0; height: 2px; background: var(--primary); transition: width 0.5s; }
+    .review-card:hover .top-line { width: 100%; }
+    .stars { margin-bottom: 1rem; color: var(--primary); font-size: 0.9rem; }
+    .review-quote { font-size: 1.05rem; font-style: italic; margin-bottom: 1.5rem; line-height: 1.6; }
+    .review-author { font-family: var(--font-mono); font-size: 0.7rem; color: var(--primary); letter-spacing: 0.15em; }
+
+    /* CTA */
+    #cta { position: relative; padding: 8rem 0; overflow: hidden; text-align: center; }
+    .cta-bg { position: absolute; inset: 0; z-index: 0; }
+    .cta-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.3; }
+    .cta-overlay { position: absolute; inset: 0; background: rgba(8,12,16,0.7); }
+    .cta-content { position: relative; z-index: 10; }
+    .cta-title { font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 900; text-transform: uppercase; margin-bottom: 1.5rem; }
+    .cta-desc { color: var(--muted); font-size: 1.1rem; max-width: 40rem; margin: 0 auto 2.5rem; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 3rem 0; }
+    .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+    .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+    .footer-nav a { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); transition: color 0.2s; }
+    .footer-nav a:hover { color: var(--primary); }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.6rem; color: rgba(90,112,128,0.5); letter-spacing: 0.1em; }
+
+    /* ANIMATIONS */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 20px hsl(174,65%,46%,0.3); } 50% { box-shadow: 0 0 40px hsl(174,65%,46%,0.6); } }
+    @keyframes scrollBounce { 0%,100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(10px); opacity: 1; } }
+    @keyframes floatUp { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 0.8; } 100% { transform: translateY(-120vh); opacity: 0; } }
+    @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    @media (max-width: 768px) {
+      .settlement-grid { grid-template-columns: 1fr; }
+      header nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="inner">
+    <img src="https://res.cloudinary.com/dsarzszqm/image/upload/v1773530826/logo_cvamsk.png" alt="Once Human" style="height:40px;object-fit:contain;">
+    <nav>
+      <a href="#trailer">Trailer</a>
+      <a href="#features">Features</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#community">Community</a>
+    </nav>
+    <a href="https://to.wendiro.com/u?k=24c3cf9a5dde4dd896352d1314e9aacd&via=16281" target="_blank" rel="noopener noreferrer" class="btn-primary">
+      ⬇ Download Now
+    </a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg">
+    <video autoplay muted loop playsinline>
+      <source src="https://res.cloudinary.com/dsarzszqm/video/upload/v1773585881/vd_lp_c1tokj.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-overlay2"></div>
+  <div class="particles" id="particles"></div>
+  <div class="hero-content">
+    <div style="max-width:700px">
+      <p class="hero-eyebrow">Open World Survival Game</p>
+      <h1 class="hero-title">
+        Survive the<br>
+        <span class="text-cyan">Contamination.</span><br>
+        Rebuild <span class="text-crimson">Humanity.</span>
+      </h1>
+      <p class="hero-desc">Enter a corrupted world where survival means adapting, fighting, and building a future among chaos.</p>
+      <div class="hero-cta">
+        <a href="https://to.wendiro.com/u?k=24c3cf9a5dde4dd896352d1314e9aacd&via=16281" target="_blank" rel="noopener noreferrer" class="btn-primary btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Download Now — Free to Play
+        </a>
+      </div>
+
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <svg class="scroll-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- TRAILER -->
+<section id="trailer">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-eyebrow">Official Trailer</p>
+      <h2 class="section-title">See the World of <span class="text-cyan">Once Human</span></h2>
+      <p class="section-desc">Explore vast contaminated lands, battle mutated horrors, build your sanctuary, and survive with your squad.</p>
+    </div>
+    <div class="trailer-wrapper reveal">
+      <div class="trailer-frame">
+        <iframe src="https://www.youtube.com/embed/KtK_cBLCv3Q?si=17wrblP-qHGQqqn_"
+          title="Once Human Trailer"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen></iframe>
+      </div>
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div>
+      <div class="corner corner-br"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-eyebrow">Core Features</p>
+      <h2 class="section-title"><span class="text-cyan">Fight.</span> Build. <span class="text-crimson">Survive.</span></h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card cyan reveal reveal-delay-1">
+        <div class="feature-icon cyan"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <h3>Open World Exploration</h3><p>Explore a massive contaminated world filled with secrets.</p>
+        <div class="slide-line"></div>
+      </div>
+      <div class="feature-card red reveal reveal-delay-2">
+        <div class="feature-icon red"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Survival System</h3><p>Manage resources, hunger, and danger.</p>
+        <div class="slide-line"></div>
+      </div>
+      <div class="feature-card red reveal reveal-delay-3">
+        <div class="feature-icon red"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5-2 4-2 4 2 4 2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg></div>
+        <h3>Mutated Creatures</h3><p>Fight terrifying supernatural enemies.</p>
+        <div class="slide-line"></div>
+      </div>
+      <div class="feature-card cyan reveal reveal-delay-1">
+        <div class="feature-icon cyan"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+        <h3>Crafting System</h3><p>Build powerful weapons and tools.</p>
+        <div class="slide-line"></div>
+      </div>
+      <div class="feature-card cyan reveal reveal-delay-2">
+        <div class="feature-icon cyan"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <h3>Base Building</h3><p>Create and defend your own settlement.</p>
+        <div class="slide-line"></div>
+      </div>
+      <div class="feature-card red reveal reveal-delay-3">
+        <div class="feature-icon red"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Co-op Multiplayer</h3><p>Survive together with your squad.</p>
+        <div class="slide-line"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-eyebrow">Gallery</p>
+      <h2 class="section-title">A World of <span class="text-crimson">Chaos</span></h2>
+    </div>
+    <div class="screenshots-grid">
+      <div class="screenshot-item reveal reveal-delay-1">
+        <img src="https://res.cloudinary.com/dsarzszqm/image/upload/v1773587442/g1_aq07tq.jpg" alt="Epic Combat">
+        <div class="screenshot-label"><span>Epic Combat</span></div>
+      </div>
+      <div class="screenshot-item reveal reveal-delay-2">
+        <img src="https://res.cloudinary.com/dsarzszqm/image/upload/v1773587443/g2_u0vwcp.jpg" alt="Horror Encounters">
+        <div class="screenshot-label"><span>Horror Encounters</span></div>
+      </div>
+      <div class="screenshot-item reveal reveal-delay-3">
+        <img src="https://res.cloudinary.com/dsarzszqm/image/upload/v1773587444/g3_a2bdga.jpg" alt="Aberrant Progeny">
+        <div class="screenshot-label"><span>Aberrant Progeny</span></div>
+      </div>
+      <div class="screenshot-item reveal reveal-delay-1">
+        <img src="https://res.cloudinary.com/dsarzszqm/image/upload/v1773530868/p1_228_en_%E6%A8%AA_%E5%9D%A0%E8%90%BDKV%E6%8E%92%E7%89%88_0s_%E9%BB%84%E5%9C%86%E5%9C%86_1200x628_e51o3j.jpg" alt="Corrupted Lands">
+        <div class="screenshot-label"><span>Corrupted Lands</span></div>
+      </div>
+      <div class="screenshot-item reveal reveal-delay-2">
+        <img src="https://res.cloudinary.com/dsarzszqm/image/upload/v1773587444/g6_fppn1y.jpg" alt="Boss Fights">
+        <div class="screenshot-label"><span>Boss Fights</span></div>
+      </div>
+      <div class="screenshot-item reveal reveal-delay-3">
+        <img src="https://res.cloudinary.com/dsarzszqm/image/upload/v1773587449/g8_htdmxw.jpg" alt="Mutated Creatures">
+        <div class="screenshot-label"><span>Mutated Creatures</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SETTLEMENT -->
+<section id="settlement">
+  <div class="container">
+    <div class="settlement-grid">
+      <div class="reveal">
+        <p class="section-eyebrow settlement-eyebrow">Your Territory</p>
+        <h2 class="section-title">Build Your <span class="highlight">Settlement</span></h2>
+        <p style="color:var(--muted);font-size:1.05rem;line-height:1.7">Construct your base from the ground up. Design defensive fortifications, craft stations, and storage systems. Protect your territory from mutated threats and rival survivors.</p>
+        <ul class="settlement-list">
+          <li>Full creative building system</li>
+          <li>Defensive structures &amp; traps</li>
+          <li>Crafting stations &amp; upgrades</li>
+          <li>Territory defense mechanics</li>
+        </ul>
+      </div>
+      <div class="settlement-img reveal">
+        <img src="https://res.cloudinary.com/dsarzszqm/image/upload/v1773587444/g5_om9equ.jpg" alt="Base Building">
+        <div class="c-tl"></div>
+        <div class="c-br"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="community">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-eyebrow">Player Reviews</p>
+      <h2 class="section-title">What <span class="text-cyan">Players</span> Say</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal reveal-delay-1">
+        <div class="top-line"></div>
+        <div class="stars">★★★★★</div>
+        <p class="review-quote">"One of the most immersive survival games ever. The contaminated world feels alive and terrifying."</p>
+        <p class="review-author">— GameSpot</p>
+      </div>
+      <div class="review-card reveal reveal-delay-2">
+        <div class="top-line"></div>
+        <div class="stars">★★★★</div>
+        <p class="review-quote">"Dark, intense, and incredibly addictive. Once Human redefines open-world survival."</p>
+        <p class="review-author">— IGN</p>
+      </div>
+      <div class="review-card reveal reveal-delay-3">
+        <div class="top-line"></div>
+        <div class="stars">★★★★★</div>
+        <p class="review-quote">"The base building and co-op mechanics are best in class. A must-play for survival fans."</p>
+        <p class="review-author">— PC Gamer</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SYSTEM REQUIREMENTS -->
+<section id="requirements">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-eyebrow">PC Specifications</p>
+      <h2 class="section-title">System <span class="text-cyan">Requirements</span></h2>
+    </div>
+    <div class="req-wrapper reveal" style="max-width:720px;margin:3rem auto 0;">
+      <div style="background:linear-gradient(135deg,#0d1117 0%,#110d1f 100%);border:1px solid var(--border);padding:2.5rem;position:relative;">
+        <div style="position:absolute;top:-1px;left:-1px;width:24px;height:24px;border-top:2px solid var(--primary);border-left:2px solid var(--primary);"></div>
+        <div style="position:absolute;top:-1px;right:-1px;width:24px;height:24px;border-top:2px solid var(--primary);border-right:2px solid var(--primary);"></div>
+        <div style="position:absolute;bottom:-1px;left:-1px;width:24px;height:24px;border-bottom:2px solid var(--secondary);border-left:2px solid var(--secondary);"></div>
+        <div style="position:absolute;bottom:-1px;right:-1px;width:24px;height:24px;border-bottom:2px solid var(--secondary);border-right:2px solid var(--secondary);"></div>
+
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:1.75rem;">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--primary);display:inline-block;animation:pulse-dot 1.5s ease-in-out infinite;"></span>
+          <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--primary);letter-spacing:0.25em;text-transform:uppercase;">Minimum Requirements</span>
+        </div>
+
+        <table style="width:100%;border-collapse:collapse;">
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;padding:0.9rem 0;width:35%;">OS</td>
+              <td style="font-family:var(--font-body);font-size:1rem;color:var(--fg);padding:0.9rem 0;">Windows 10 / 11 (64-bit)</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;padding:0.9rem 0;">Processor</td>
+              <td style="font-family:var(--font-body);font-size:1rem;color:var(--fg);padding:0.9rem 0;">Intel Core i5 or AMD equivalent</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;padding:0.9rem 0;">Memory</td>
+              <td style="font-family:var(--font-body);font-size:1rem;color:var(--fg);padding:0.9rem 0;">8 GB RAM</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;padding:0.9rem 0;">Graphics</td>
+              <td style="font-family:var(--font-body);font-size:1rem;color:var(--fg);padding:0.9rem 0;">NVIDIA GTX 1060 or equivalent</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;padding:0.9rem 0;">Storage</td>
+              <td style="font-family:var(--font-body);font-size:1rem;color:var(--fg);padding:0.9rem 0;">40 GB available space</td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;padding:0.9rem 0;">Network</td>
+              <td style="font-family:var(--font-body);font-size:1rem;color:var(--fg);padding:0.9rem 0;">Broadband Internet connection</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:2rem;display:flex;justify-content:center;">
+          <span style="display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--primary);border:1px solid var(--primary);padding:0.4rem 1rem;">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);"></span>
+            Windows PC Only
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-bg">
+    <img src="https://res.cloudinary.com/dsarzszqm/image/upload/v1773530868/p1_228_en_%E6%A8%AA_%E5%9D%A0%E8%90%BDKV%E6%8E%92%E7%89%88_0s_%E9%BB%84%E5%9C%86%E5%9C%86_1200x628_e51o3j.jpg" alt="">
+    <div class="cta-overlay"></div>
+  </div>
+  <div class="particles" id="particles2"></div>
+  <div class="container cta-content reveal">
+    <h2 class="cta-title">Ready to <span class="text-cyan">Survive</span>?</h2>
+    <p class="cta-desc">Download Once Human now and enter a world where humanity fights for survival.</p>
+    <a href="https://to.wendiro.com/u?k=24c3cf9a5dde4dd896352d1314e9aacd&via=16281" target="_blank" rel="noopener noreferrer" class="btn-primary btn-lg">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Download for PC — Free to Play
+    </a>
+  </div>
+</section>
+
+<!-- FIXED CTA -->
+<a href="https://to.wendiro.com/u?k=24c3cf9a5dde4dd896352d1314e9aacd&via=16281" target="_blank" rel="noopener noreferrer" id="fixed-cta">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+  <span>Download Free</span>
+</a>
+<style>
+  #fixed-cta {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--primary) 0%, hsl(180,100%,40%) 100%);
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 0.65rem 1.5rem;
+    text-decoration: none;
+    animation: pulse-glow 2s ease-in-out infinite;
+    transition: opacity 0.3s;
+    opacity: 0;
+    white-space: nowrap;
+  }
+  #fixed-cta:hover { transform: translateX(-50%) scale(1.05); }
+  #fixed-cta:active, #fixed-cta:focus, #fixed-cta:visited {
+    background: linear-gradient(135deg, var(--primary) 0%, hsl(180,100%,40%) 100%);
+    color: var(--bg);
+    outline: none;
+  }
+  #fixed-cta.visible { opacity: 1; }
+</style>
+<script>
+  const fixedCta = document.getElementById('fixed-cta');
+  window.addEventListener('scroll', () => {
+    fixedCta.classList.toggle('visible', window.scrollY > 300);
+  });
+</script>
+
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <img src="https://res.cloudinary.com/dsarzszqm/image/upload/v1773530826/logo_cvamsk.png" alt="Once Human" style="height:32px;object-fit:contain;opacity:0.7;">
+      <nav class="footer-nav">
+        <a href="https://discord.gg/oncehuman" target="_blank" rel="noopener noreferrer">Discord</a>
+        <a href="https://twitter.com/OnceHuman_" target="_blank" rel="noopener noreferrer">Twitter</a>
+        <a href="https://store.steampowered.com/app/2139460/Once_Human/" target="_blank" rel="noopener noreferrer">Steam</a>
+        <a href="https://www.oncehuman.game/" target="_blank" rel="noopener noreferrer">Official Site</a>
+      </nav>
+      <p class="footer-copy">© 2026 Starry Studio. All rights reserved. Once Human is a trademark of NetEase.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 50));
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '-80px' });
+  revealEls.forEach(el => observer.observe(el));
+
+  function createParticles(container) {
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      const size = Math.random() * 4 + 1;
+      p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${6+Math.random()*10}s;animation-delay:${Math.random()*6}s;`;
+      container.appendChild(p);
+    }
+  }
+  createParticles(document.getElementById('particles'));
+  createParticles(document.getElementById('particles2'));
+</script>
+<!-- FIXED CTA -->
+<a href="https://to.wendiro.com/u?k=24c3cf9a5dde4dd896352d1314e9aacd&via=16281" target="_blank" rel="noopener noreferrer" id="fixed-cta" style="
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, hsl(174,65%,46%) 0%, hsl(180,100%,40%) 100%);
+  color: #080c10;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 0.9rem 1.75rem;
+  text-decoration: none;
+  animation: pulse-glow 2s ease-in-out infinite;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 24px hsl(174,65%,46%,0.4);
+">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  Download Free
+</a>
+
+<script>
+  document.getElementById('fixed-cta').addEventListener('mouseover', function(){ this.style.transform = 'scale(1.05)'; });
+  document.getElementById('fixed-cta').addEventListener('mouseout', function(){ this.style.transform = 'scale(1)'; });
+</script>
+</html>
